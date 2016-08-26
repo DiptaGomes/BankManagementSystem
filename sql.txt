@@ -1,0 +1,77 @@
+create table customer(
+c_username varchar2(20),
+cust_name varchar2(20) not null,
+cust_phone varchar2(20),
+cust_mail varchar2(20),
+constraint pk_customer_un primary key(c_username)
+);
+
+
+create table account
+(
+acc_no number(5),
+acc_type varchar2(2),
+acc_balance number(5) not null,
+acc_init number(5) not null,
+constraint pk_account_accno primary key(acc_no),
+constraint chk_acctype check ( acc_type in ('current', 'salary', 'fixed'))
+);
+
+
+create table userimg
+(
+username varchar2(20),
+password varchar2(20) not null,
+constraint pk_user primary key(username),
+constraint fk_user foreign key(username) references customer(c_username)
+);
+
+create table acc_cust
+(
+acc_no number(5),
+c_user varchar2(20),
+constraint pk_acccust primary key(acc_no,c_user),
+constraint fk_acccust1 foreign key(acc_no) references account(acc_no),
+constraint fk_acccust2 foreign key(c_user) references customer(c_username)
+);
+
+
+CREATE SEQUENCE acc_no
+MINVALUE 1
+START WITH 1
+INCREMENT BY 1
+CACHE 10
+
+
+create table acc_cust
+(
+acc_no number(5),
+c_user varchar2(20),
+constraint pk_acccust primary key(acc_no,c_user),
+constraint fk_acccust1 foreign key(acc_no) references account(acc_no),
+constraint fk_acccust2 foreign key(c_user) references customer(c_username)
+);
+
+
+insert into customer values ('admin', 'Dipta', '123', 'dipta@g.com');
+insert into userimg values('admin','admin');
+
+
+create table transaction_log (
+log_id number(5),
+acc_no number(5),
+username varchar2(20),
+transaction_type varchar2(20),
+amount number(5),
+transdatetime date,
+constraint pk_tranlog primary key(log_id),
+constraint fk_tranlog_1 foreign key(acc_no) references account(acc_no),
+constraint fk_tranlog_2 foreign key(username) references userimg(username),
+constraint chk_transaction_type check (transaction_type in ('deposit', 'withdraw'))
+)
+
+CREATE SEQUENCE log_increase
+MINVALUE 1
+START WITH 1
+INCREMENT BY 1
+CACHE 10
